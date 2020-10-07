@@ -115,7 +115,7 @@ func (objMgr *ObjectManager) CreateDefaultNetviews(globalNetview string, localNe
 	return
 }
 
-func (objMgr *ObjectManager) CreateNetwork(netview string, cidr string, name string) (*Network, error) {
+func (objMgr *ObjectManager) CreateNetwork(netview string, cidr string, name string, comment string) (*Network, error) {
 	network := NewNetwork(Network{
 		NetviewName: netview,
 		Cidr:        cidr,
@@ -123,6 +123,9 @@ func (objMgr *ObjectManager) CreateNetwork(netview string, cidr string, name str
 
 	if name != "" {
 		network.Ea["Network Name"] = name
+	}
+	if comment != "" {
+		network.Ea["Comment"] = comment
 	}
 	ref, err := objMgr.connector.CreateObject(network)
 	if err != nil {
@@ -458,7 +461,7 @@ func (objMgr *ObjectManager) CreateHostRecord(enabledns bool, recordName string,
 
 	ref, err := objMgr.connector.CreateObject(recordHost)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	recordHost.Ref = ref
 	err = objMgr.connector.GetObject(recordHost, ref, &recordHost)
